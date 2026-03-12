@@ -1,0 +1,101 @@
+import { ExpensesByCategoryChart } from "@/components/dashboard/expenses-by-category-chart";
+import { MonthlyChart } from "@/components/dashboard/monthly-chart";
+import { RecentTransactions } from "@/components/dashboard/recent-transactions";
+import { SummaryCards } from "@/components/dashboard/summary-cards";
+import { Header } from "@/components/layout/header";
+import { Sidebar } from "@/components/layout/sidebar";
+import { getDashboardData } from "@/lib/dashboard";
+
+export default async function DashboardPage() {
+    const data = await getDashboardData();
+
+    return (
+        <div className="min-h-screen bg-slate-100 text-slate-900">
+            <div className="flex min-h-screen">
+                <Sidebar />
+
+                <div className="flex min-w-0 flex-1 flex-col">
+                    <Header userName={data.user.name} />
+
+                    <main className="flex-1 p-6 lg:p-8">
+                        <div className="mx-auto max-w-[1600px] space-y-6">
+                            <SummaryCards
+                                totalIncome={data.summary.totalIncome}
+                                totalExpense={data.summary.totalExpense}
+                                totalInvestments={data.summary.totalInvestments}
+                                balance={data.summary.balance}
+                            />
+
+                            <section className="grid gap-6 2xl:grid-cols-[minmax(0,1.7fr)_420px]">
+                                <div className="min-w-0">
+                                    <MonthlyChart data={data.monthlyEvolution} />
+                                </div>
+
+                                <div>
+                                    <RecentTransactions transactions={data.recentTransactions} />
+                                </div>
+                            </section>
+
+                            <section className="grid gap-6 2xl:grid-cols-[420px_minmax(0,1fr)]">
+                                <div>
+                                    <ExpensesByCategoryChart data={data.expensesByCategory} />
+                                </div>
+
+                                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                                    <h3 className="text-lg font-semibold text-slate-900">
+                                        Visão do mês
+                                    </h3>
+                                    <p className="mt-1 text-sm text-slate-500">
+                                        Resumo consolidado do seu momento financeiro atual.
+                                    </p>
+
+                                    <div className="mt-6 grid gap-4 md:grid-cols-3">
+                                        <div className="rounded-2xl bg-slate-50 p-4">
+                                            <p className="text-sm text-slate-500">Receitas</p>
+                                            <p className="mt-2 text-xl font-semibold text-slate-900">
+                                                {new Intl.NumberFormat("pt-BR", {
+                                                    style: "currency",
+                                                    currency: "BRL",
+                                                }).format(data.summary.totalIncome)}
+                                            </p>
+                                        </div>
+
+                                        <div className="rounded-2xl bg-slate-50 p-4">
+                                            <p className="text-sm text-slate-500">Despesas</p>
+                                            <p className="mt-2 text-xl font-semibold text-slate-900">
+                                                {new Intl.NumberFormat("pt-BR", {
+                                                    style: "currency",
+                                                    currency: "BRL",
+                                                }).format(data.summary.totalExpense)}
+                                            </p>
+                                        </div>
+
+                                        <div className="rounded-2xl bg-slate-50 p-4">
+                                            <p className="text-sm text-slate-500">Investimentos</p>
+                                            <p className="mt-2 text-xl font-semibold text-slate-900">
+                                                {new Intl.NumberFormat("pt-BR", {
+                                                    style: "currency",
+                                                    currency: "BRL",
+                                                }).format(data.summary.totalInvestments)}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-6 rounded-2xl bg-slate-900 p-5 text-white">
+                                        <p className="text-sm text-slate-300">Saldo atual do mês</p>
+                                        <p className="mt-2 text-3xl font-semibold">
+                                            {new Intl.NumberFormat("pt-BR", {
+                                                style: "currency",
+                                                currency: "BRL",
+                                            }).format(data.summary.balance)}
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    );
+}

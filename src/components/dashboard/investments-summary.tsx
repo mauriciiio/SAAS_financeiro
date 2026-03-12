@@ -38,13 +38,13 @@ export function InvestmentsSummary({
                 return (
                     <Card
                         key={item.title}
-                        className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                        className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
                     >
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-slate-500">{item.title}</p>
-                                    <h3 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{item.title}</p>
+                                    <h3 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                                         {item.value}
                                     </h3>
                                     <p className="mt-2 text-sm text-slate-500">{item.helper}</p>

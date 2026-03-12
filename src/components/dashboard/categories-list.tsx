@@ -47,25 +47,25 @@ export function CategoriesList({
     categories,
 }: CategoriesListProps) {
     return (
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h3>
             </div>
 
             <div className="space-y-3">
                 {categories.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
+                    <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500 dark:border-slate-600 dark:text-slate-400">
                         {emptyText}
                     </div>
                 ) : (
                     categories.map((category) => (
                         <div
                             key={category.id}
-                            className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4"
+                            className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50"
                         >
                             <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">
-                                    <p className="truncate text-sm font-semibold text-slate-900">
+                                    <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                                         {category.name}
                                     </p>
 
@@ -78,7 +78,7 @@ export function CategoriesList({
                                     </span>
                                 </div>
 
-                                <p className="mt-1 text-sm text-slate-500">
+                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                     Cor: {category.color || "não definida"} • Ícone:{" "}
                                     {category.icon || "não definido"}
                                 </p>

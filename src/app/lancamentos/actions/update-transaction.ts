@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { parseLocalDate } from "@/lib/format";
 import { CategoryType, TransactionType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -73,7 +74,7 @@ export async function updateTransaction(formData: FormData) {
         type: typeRaw as TransactionType,
         categoryId,
         amount,
-        date: new Date(dateRaw),
+        date: parseLocalDate(dateRaw),
         isFixed,
       },
     });

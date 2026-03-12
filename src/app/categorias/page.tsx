@@ -9,7 +9,7 @@ export default async function CategoriasPage() {
     const data = await getCategoriesPageData();
 
     return (
-        <div className="min-h-screen bg-slate-100 text-slate-900">
+        <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
             <div className="flex min-h-screen">
                 <Sidebar />
 
@@ -19,10 +19,10 @@ export default async function CategoriasPage() {
                     <main className="flex-1 p-6 lg:p-8">
                         <div className="mx-auto max-w-[1600px] space-y-6">
                             <div>
-                                <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+                                <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                                     Categorias
                                 </h1>
-                                <p className="mt-1 text-sm text-slate-500">
+                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                     Cadastre e organize as categorias do sistema.
                                 </p>
                             </div>

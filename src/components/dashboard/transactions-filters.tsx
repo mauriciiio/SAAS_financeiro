@@ -39,15 +39,15 @@ export function TransactionsFilters({
     return (
         <form
             method="GET"
-            className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm"
+            className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800"
         >
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Tipo</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Tipo</label>
                     <select
                         name="type"
                         defaultValue={selectedType}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                     >
                         <option value="">Todos</option>
                         <option value="INCOME">Receitas</option>
@@ -56,11 +56,11 @@ export function TransactionsFilters({
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Categoria</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Categoria</label>
                     <select
                         name="category"
                         defaultValue={selectedCategory}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                     >
                         <option value="">Todas</option>
                         {categories.map((category) => (
@@ -72,11 +72,11 @@ export function TransactionsFilters({
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Mês</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Mês</label>
                     <select
                         name="month"
                         defaultValue={selectedMonth}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                     >
                         {months.map((month) => (
                             <option key={month.value} value={month.value}>
@@ -87,11 +87,11 @@ export function TransactionsFilters({
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700">Ano</label>
+                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Ano</label>
                     <select
                         name="year"
                         defaultValue={selectedYear}
-                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                        className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                     >
                         {years.map((year) => (
                             <option key={year} value={year}>
@@ -111,7 +111,7 @@ export function TransactionsFilters({
 
                     <a
                         href="/lancamentos"
-                        className="inline-flex h-10 items-center justify-center rounded-2xl border border-slate-200 px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+                        className="inline-flex h-10 items-center justify-center rounded-2xl border border-slate-200 px-4 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700"
                     >
                         Limpar
                     </a>

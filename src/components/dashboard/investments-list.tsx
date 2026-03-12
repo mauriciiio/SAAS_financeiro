@@ -18,31 +18,31 @@ type InvestmentsListProps = {
 
 export function InvestmentsList({ investments }: InvestmentsListProps) {
     return (
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900">Aportes</h3>
-                <p className="mt-1 text-sm text-slate-500">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Aportes</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Lista dos investimentos cadastrados.
                 </p>
             </div>
 
             <div className="space-y-3">
                 {investments.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
+                    <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500 dark:border-slate-600 dark:text-slate-400">
                         Nenhum aporte cadastrado ainda.
                     </div>
                 ) : (
                     investments.map((investment) => (
                         <div
                             key={investment.id}
-                            className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4"
+                            className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50"
                         >
                             <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-semibold text-slate-900">
+                                <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                                     {investment.title}
                                 </p>
 
-                                <p className="mt-1 text-sm text-slate-500">
+                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                     {[investment.assetType, investment.institution]
                                         .filter(Boolean)
                                         .join(" • ") || "Sem detalhes"}{" "}
@@ -50,7 +50,7 @@ export function InvestmentsList({ investments }: InvestmentsListProps) {
                                 </p>
 
                                 {investment.notes && (
-                                    <p className="mt-1 truncate text-xs text-slate-400">
+                                    <p className="mt-1 truncate text-xs text-slate-400 dark:text-slate-500">
                                         {investment.notes}
                                     </p>
                                 )}

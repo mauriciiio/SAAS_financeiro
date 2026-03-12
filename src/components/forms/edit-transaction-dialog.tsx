@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Pencil } from "lucide-react";
 import { updateTransaction } from "@/app/lancamentos/actions/update-transaction";
+import { formatDateForInput } from "@/lib/format";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import {
@@ -54,7 +55,7 @@ export function EditTransactionDialog({
         }
     }, [filteredCategories, selectedCategoryId]);
 
-    const defaultDate = new Date(transaction.date).toISOString().split("T")[0];
+    const defaultDate = formatDateForInput(new Date(transaction.date));
 
     async function action(formData: FormData) {
         const result = await updateTransaction(formData);
@@ -73,7 +74,7 @@ export function EditTransactionDialog({
             <DialogTrigger asChild>
                 <button
                     type="button"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600 dark:hover:text-slate-100"
                     title="Editar lançamento"
                 >
                     <Pencil size={16} />
@@ -89,17 +90,17 @@ export function EditTransactionDialog({
                     <input type="hidden" name="id" value={transaction.id} />
 
                     <div className="space-y-2 md:col-span-2">
-                        <label className="text-sm font-medium text-slate-700">Título</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Título</label>
                         <Input name="title" defaultValue={transaction.title} required />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Tipo</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Tipo</label>
                         <select
                             name="type"
                             value={type}
                             onChange={(e) => setType(e.target.value as "INCOME" | "EXPENSE")}
-                            className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                            className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                         >
                             <option value="EXPENSE">Despesa</option>
                             <option value="INCOME">Receita</option>
@@ -107,12 +108,12 @@ export function EditTransactionDialog({
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Categoria</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Categoria</label>
                         <select
                             name="categoryId"
                             value={selectedCategoryId}
                             onChange={(e) => setSelectedCategoryId(e.target.value)}
-                            className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                            className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                             required
                         >
                             {filteredCategories.map((category) => (
@@ -124,7 +125,7 @@ export function EditTransactionDialog({
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Valor</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Valor</label>
                         <Input
                             name="amount"
                             type="number"
@@ -136,20 +137,20 @@ export function EditTransactionDialog({
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Data</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Data</label>
                         <Input name="date" type="date" defaultValue={defaultDate} required />
                     </div>
 
                     <div className="space-y-2 md:col-span-2">
-                        <label className="text-sm font-medium text-slate-700">Descrição</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Descrição</label>
                         <textarea
                             name="description"
                             defaultValue={transaction.description || ""}
-                            className="min-h-[100px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                            className="min-h-[100px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                         />
                     </div>
 
-                    <label className="flex items-center gap-2 text-sm text-slate-700 md:col-span-2">
+                    <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 md:col-span-2">
                         <input type="checkbox" name="isFixed" defaultChecked={transaction.isFixed} />
                         Lançamento fixo
                     </label>

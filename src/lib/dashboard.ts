@@ -42,34 +42,40 @@ export async function getDashboardData() {
 
   const { start, end } = getMonthRange();
 
-  const transactions = await prisma.transaction.findMany({
-    where: {
-      userId: user.id,
-      date: {
-        gte: start,
-        lt: end,
-      },
-    },
-    include: {
-      category: true,
-    },
-    orderBy: {
-      date: "desc",
-    },
-  });
+  const lastMonths = getLastMonths(6);
+  const evolutionStart = lastMonths[0].start;
 
-  const investments = await prisma.investmentContribution.findMany({
-    where: {
-      userId: user.id,
-      date: {
-        gte: start,
-        lt: end,
-      },
-    },
-    orderBy: {
-      date: "desc",
-    },
-  });
+  // Busca todos os dados em paralelo com apenas 4 queries (antes eram 12+ queries)
+  const [transactions, investments, evolutionTransactions, evolutionInvestments] =
+    await Promise.all([
+      prisma.transaction.findMany({
+        where: {
+          userId: user.id,
+          date: { gte: start, lt: end },
+        },
+        include: { category: true },
+        orderBy: { date: "desc" },
+      }),
+      prisma.investmentContribution.findMany({
+        where: {
+          userId: user.id,
+          date: { gte: start, lt: end },
+        },
+        orderBy: { date: "desc" },
+      }),
+      prisma.transaction.findMany({
+        where: {
+          userId: user.id,
+          date: { gte: evolutionStart, lt: end },
+        },
+      }),
+      prisma.investmentContribution.findMany({
+        where: {
+          userId: user.id,
+          date: { gte: evolutionStart, lt: end },
+        },
+      }),
+    ]);
 
   const totalIncome = transactions
     .filter((item) => item.type === TransactionType.INCOME)
@@ -105,51 +111,36 @@ export async function getDashboardData() {
     }))
     .sort((a, b) => b.value - a.value);
 
-  const lastMonths = getLastMonths(6);
+  // Agrega dados dos 6 meses em memória (evita N+1 queries)
+  const monthlyEvolution = lastMonths.map((month) => {
+    const monthTransactions = evolutionTransactions.filter(
+      (t) => t.date >= month.start && t.date < month.end
+    );
 
-  const monthlyEvolution = await Promise.all(
-    lastMonths.map(async (month) => {
-      const monthTransactions = await prisma.transaction.findMany({
-        where: {
-          userId: user.id,
-          date: {
-            gte: month.start,
-            lt: month.end,
-          },
-        },
-      });
+    const monthInvestments = evolutionInvestments.filter(
+      (i) => i.date >= month.start && i.date < month.end
+    );
 
-      const monthInvestments = await prisma.investmentContribution.findMany({
-        where: {
-          userId: user.id,
-          date: {
-            gte: month.start,
-            lt: month.end,
-          },
-        },
-      });
+    const income = monthTransactions
+      .filter((item) => item.type === TransactionType.INCOME)
+      .reduce((acc, item) => acc + Number(item.amount), 0);
 
-      const income = monthTransactions
-        .filter((item) => item.type === TransactionType.INCOME)
-        .reduce((acc, item) => acc + Number(item.amount), 0);
+    const expense = monthTransactions
+      .filter((item) => item.type === TransactionType.EXPENSE)
+      .reduce((acc, item) => acc + Number(item.amount), 0);
 
-      const expense = monthTransactions
-        .filter((item) => item.type === TransactionType.EXPENSE)
-        .reduce((acc, item) => acc + Number(item.amount), 0);
+    const investment = monthInvestments.reduce(
+      (acc, item) => acc + Number(item.amount),
+      0
+    );
 
-      const investment = monthInvestments.reduce(
-        (acc, item) => acc + Number(item.amount),
-        0
-      );
-
-      return {
-        month: month.label,
-        receitas: income,
-        despesas: expense,
-        investimentos: investment,
-      };
-    })
-  );
+    return {
+      month: month.label,
+      receitas: income,
+      despesas: expense,
+      investimentos: investment,
+    };
+  });
 
   const recentTransactions = [
     ...transactions.map((item) => ({

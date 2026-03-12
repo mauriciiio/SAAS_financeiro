@@ -32,17 +32,17 @@ export function TransactionsList({
     categories,
 }: TransactionsListProps) {
     return (
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900">Lançamentos</h3>
-                <p className="mt-1 text-sm text-slate-500">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Lançamentos</h3>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                     Lista das suas receitas e despesas cadastradas.
                 </p>
             </div>
 
             <div className="space-y-3">
                 {transactions.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500">
+                    <div className="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-500 dark:border-slate-600 dark:text-slate-400">
                         Nenhum lançamento cadastrado ainda.
                     </div>
                 ) : (
@@ -54,11 +54,11 @@ export function TransactionsList({
                         return (
                             <div
                                 key={transaction.id}
-                                className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4"
+                                className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-700 dark:bg-slate-700/50"
                             >
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-center gap-2">
-                                        <p className="truncate text-sm font-semibold text-slate-900">
+                                        <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                                             {transaction.title}
                                         </p>
                                         {transaction.isFixed && (
@@ -68,13 +68,13 @@ export function TransactionsList({
                                         )}
                                     </div>
 
-                                    <p className="mt-1 text-sm text-slate-500">
+                                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                         {transaction.category.name} •{" "}
                                         {new Intl.DateTimeFormat("pt-BR").format(transaction.date)}
                                     </p>
 
                                     {transaction.description && (
-                                        <p className="mt-1 truncate text-xs text-slate-400">
+                                        <p className="mt-1 truncate text-xs text-slate-400 dark:text-slate-500">
                                             {transaction.description}
                                         </p>
                                     )}

@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { parseLocalDate } from "@/lib/format";
 import { CategoryType, TransactionType } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -61,7 +62,7 @@ export async function createTransaction(formData: FormData) {
         description: description || null,
         type: typeRaw as TransactionType,
         amount,
-        date: new Date(dateRaw),
+        date: parseLocalDate(dateRaw),
         isFixed,
         isPaid: true,
       },

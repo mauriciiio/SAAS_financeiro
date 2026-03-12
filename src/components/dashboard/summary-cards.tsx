@@ -65,16 +65,16 @@ export function SummaryCards({
                 return (
                     <Card
                         key={card.title}
-                        className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                        className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
                     >
                         <CardContent className="p-6">
                             <div className="flex items-start justify-between">
                                 <div>
-                                    <p className="text-sm font-medium text-slate-500">{card.title}</p>
-                                    <h3 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400">{card.title}</p>
+                                    <h3 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                                         {formatCurrency(values[card.key])}
                                     </h3>
-                                    <p className="mt-2 text-sm text-slate-500">{card.helper}</p>
+                                    <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{card.helper}</p>
                                 </div>
 
                                 <div

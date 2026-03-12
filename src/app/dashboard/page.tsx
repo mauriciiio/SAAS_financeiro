@@ -10,7 +10,7 @@ export default async function DashboardPage() {
     const data = await getDashboardData();
 
     return (
-        <div className="min-h-screen bg-slate-100 text-slate-900">
+        <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
             <div className="flex min-h-screen">
                 <Sidebar />
 
@@ -41,18 +41,18 @@ export default async function DashboardPage() {
                                     <ExpensesByCategoryChart data={data.expensesByCategory} />
                                 </div>
 
-                                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-                                    <h3 className="text-lg font-semibold text-slate-900">
+                                <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+                                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                                         Visão do mês
                                     </h3>
-                                    <p className="mt-1 text-sm text-slate-500">
+                                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                         Resumo consolidado do seu momento financeiro atual.
                                     </p>
 
                                     <div className="mt-6 grid gap-4 md:grid-cols-3">
-                                        <div className="rounded-2xl bg-slate-50 p-4">
-                                            <p className="text-sm text-slate-500">Receitas</p>
-                                            <p className="mt-2 text-xl font-semibold text-slate-900">
+                                        <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/50">
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Receitas</p>
+                                            <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                                 {new Intl.NumberFormat("pt-BR", {
                                                     style: "currency",
                                                     currency: "BRL",
@@ -60,9 +60,9 @@ export default async function DashboardPage() {
                                             </p>
                                         </div>
 
-                                        <div className="rounded-2xl bg-slate-50 p-4">
-                                            <p className="text-sm text-slate-500">Despesas</p>
-                                            <p className="mt-2 text-xl font-semibold text-slate-900">
+                                        <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/50">
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Despesas</p>
+                                            <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                                 {new Intl.NumberFormat("pt-BR", {
                                                     style: "currency",
                                                     currency: "BRL",
@@ -70,9 +70,9 @@ export default async function DashboardPage() {
                                             </p>
                                         </div>
 
-                                        <div className="rounded-2xl bg-slate-50 p-4">
-                                            <p className="text-sm text-slate-500">Investimentos</p>
-                                            <p className="mt-2 text-xl font-semibold text-slate-900">
+                                        <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/50">
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Investimentos</p>
+                                            <p className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-100">
                                                 {new Intl.NumberFormat("pt-BR", {
                                                     style: "currency",
                                                     currency: "BRL",

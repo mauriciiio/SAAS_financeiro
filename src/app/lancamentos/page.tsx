@@ -2,9 +2,11 @@ import { TransactionForm } from "@/components/forms/transaction-form";
 import { TransactionsFilters } from "@/components/dashboard/transactions-filters";
 import { TransactionsList } from "@/components/dashboard/transactions-list";
 import { TransactionsSummary } from "@/components/dashboard/transactions-summary";
+import { RecurringTransactionsBanner } from "@/components/forms/recurring-transactions-banner";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { getTransactionsPageData } from "@/lib/transactions";
+import { getPendingRecurringCount } from "./actions/apply-recurring-transactions";
 
 type LancamentosPageProps = {
     searchParams?: Promise<{
@@ -20,15 +22,18 @@ export default async function LancamentosPage({
 }: LancamentosPageProps) {
     const params = searchParams ? await searchParams : undefined;
 
-    const data = await getTransactionsPageData({
-        type: params?.type,
-        category: params?.category,
-        month: params?.month,
-        year: params?.year,
-    });
+    const [data, pendingCount] = await Promise.all([
+        getTransactionsPageData({
+            type: params?.type,
+            category: params?.category,
+            month: params?.month,
+            year: params?.year,
+        }),
+        getPendingRecurringCount(),
+    ]);
 
     return (
-        <div className="min-h-screen bg-slate-100 text-slate-900">
+        <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
             <div className="flex min-h-screen">
                 <Sidebar />
 
@@ -38,13 +43,17 @@ export default async function LancamentosPage({
                     <main className="flex-1 p-6 lg:p-8">
                         <div className="mx-auto max-w-[1600px] space-y-6">
                             <div>
-                                <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
+                                <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                                     Lançamentos
                                 </h1>
-                                <p className="mt-1 text-sm text-slate-500">
+                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                                     Cadastre e acompanhe suas receitas e despesas.
                                 </p>
                             </div>
+
+                            {pendingCount > 0 && (
+                                <RecurringTransactionsBanner pendingCount={pendingCount} />
+                            )}
 
                             <TransactionsSummary
                                 totalIncome={data.summary.totalIncome}

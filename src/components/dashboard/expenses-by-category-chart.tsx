@@ -34,19 +34,19 @@ export function ExpensesByCategoryChart({
     data,
 }: ExpensesByCategoryChartProps) {
     return (
-        <Card className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <Card className="rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <CardHeader className="p-6 pb-4">
-                <CardTitle className="text-lg font-semibold text-slate-900">
+                <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     Despesas por categoria
                 </CardTitle>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                     Distribuição dos seus gastos no mês atual.
                 </p>
             </CardHeader>
 
             <CardContent className="p-6 pt-0">
                 {data.length === 0 ? (
-                    <div className="flex h-[320px] items-center justify-center rounded-2xl border border-dashed border-slate-200 text-sm text-slate-500">
+                    <div className="flex h-[320px] items-center justify-center rounded-2xl border border-dashed border-slate-200 text-sm text-slate-500 dark:text-slate-400">
                         Nenhuma despesa cadastrada neste mês.
                     </div>
                 ) : (
@@ -86,16 +86,16 @@ export function ExpensesByCategoryChart({
                             {data.map((item, index) => (
                                 <div
                                     key={item.name}
-                                    className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2"
+                                    className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/50"
                                 >
                                     <div className="flex items-center gap-2">
                                         <span
                                             className="h-3 w-3 rounded-full"
                                             style={{ backgroundColor: COLORS[index % COLORS.length] }}
                                         />
-                                        <span className="text-sm text-slate-700">{item.name}</span>
+                                        <span className="text-sm text-slate-700 dark:text-slate-300">{item.name}</span>
                                     </div>
-                                    <span className="text-sm font-medium text-slate-900">
+                                    <span className="text-sm font-medium text-slate-900 dark:text-slate-100">
                                         {formatCurrency(item.value)}
                                     </span>
                                 </div>

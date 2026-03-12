@@ -9,6 +9,7 @@ import {
     Tags,
     Settings,
     Landmark,
+    BarChart3,
 } from "lucide-react";
 
 const items = [
@@ -16,6 +17,7 @@ const items = [
     { href: "/lancamentos", label: "Lançamentos", icon: Wallet },
     { href: "/investimentos", label: "Investimentos", icon: TrendingUp },
     { href: "/categorias", label: "Categorias", icon: Tags },
+    { href: "/relatorios", label: "Relatórios", icon: BarChart3 },
     { href: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 

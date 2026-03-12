@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { updateInvestment } from "@/app/investimentos/actions/update-investment";
+import { formatDateForInput } from "@/lib/format";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,7 +31,7 @@ export function EditInvestmentDialog({
     investment,
 }: EditInvestmentDialogProps) {
     const [open, setOpen] = useState(false);
-    const defaultDate = new Date(investment.date).toISOString().split("T")[0];
+    const defaultDate = formatDateForInput(new Date(investment.date));
 
     async function action(formData: FormData) {
         const result = await updateInvestment(formData);
@@ -49,7 +50,7 @@ export function EditInvestmentDialog({
             <DialogTrigger asChild>
                 <button
                     type="button"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-50 hover:text-slate-900 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600 dark:hover:text-slate-100"
                     title="Editar aporte"
                 >
                     <Pencil size={16} />
@@ -65,22 +66,22 @@ export function EditInvestmentDialog({
                     <input type="hidden" name="id" value={investment.id} />
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Título</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Título</label>
                         <Input name="title" defaultValue={investment.title} required />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Instituição</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Instituição</label>
                         <Input name="institution" defaultValue={investment.institution || ""} />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Tipo do ativo</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Tipo do ativo</label>
                         <Input name="assetType" defaultValue={investment.assetType || ""} />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Valor</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Valor</label>
                         <Input
                             name="amount"
                             type="number"
@@ -92,16 +93,16 @@ export function EditInvestmentDialog({
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Data</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Data</label>
                         <Input name="date" type="date" defaultValue={defaultDate} required />
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-slate-700">Observações</label>
+                        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Observações</label>
                         <textarea
                             name="notes"
                             defaultValue={investment.notes || ""}
-                            className="min-h-[100px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none"
+                            className="min-h-[100px] w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
                         />
                     </div>
 

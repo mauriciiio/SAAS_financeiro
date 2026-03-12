@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { parseLocalDate } from "@/lib/format";
 import { revalidatePath } from "next/cache";
 
 export async function createInvestment(formData: FormData) {
@@ -33,7 +34,7 @@ export async function createInvestment(formData: FormData) {
         institution: institution || null,
         assetType: assetType || null,
         amount,
-        date: new Date(dateRaw),
+        date: parseLocalDate(dateRaw),
         notes: notes || null,
       },
     });

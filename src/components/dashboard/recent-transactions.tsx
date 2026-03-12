@@ -17,12 +17,12 @@ export function RecentTransactions({
     transactions,
 }: RecentTransactionsProps) {
     return (
-        <Card className="rounded-3xl border border-slate-200 bg-white shadow-sm">
+        <Card className="rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
             <CardHeader className="p-6 pb-4">
-                <CardTitle className="text-lg font-semibold text-slate-900">
+                <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100">
                     Últimas movimentações
                 </CardTitle>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-500 dark:text-slate-400">
                     Suas movimentações financeiras mais recentes.
                 </p>
             </CardHeader>
@@ -41,13 +41,13 @@ export function RecentTransactions({
                     return (
                         <div
                             key={transaction.id}
-                            className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 transition hover:bg-slate-100"
+                            className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-4 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-700/50 dark:hover:bg-slate-700"
                         >
                             <div className="min-w-0">
-                                <p className="truncate text-sm font-semibold text-slate-900">
+                                <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                                     {transaction.title}
                                 </p>
-                                <p className="mt-1 text-sm text-slate-500">{transaction.category}</p>
+                                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{transaction.category}</p>
                             </div>
 
                             <div className={`text-sm font-semibold ${amountColor}`}>

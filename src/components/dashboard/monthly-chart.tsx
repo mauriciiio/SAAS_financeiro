@@ -61,9 +61,9 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
                                 border: "1px solid #e2e8f0",
                             }}
                         />
-                        <Bar dataKey="receitas" radius={[8, 8, 0, 0]} />
-                        <Bar dataKey="despesas" radius={[8, 8, 0, 0]} />
-                        <Bar dataKey="investimentos" radius={[8, 8, 0, 0]} />
+                        <Bar dataKey="receitas" radius={[8, 8, 0, 0]} fill="#22c55e" />
+                        <Bar dataKey="despesas" radius={[8, 8, 0, 0]} fill="#ef4444" />
+                        <Bar dataKey="investimentos" radius={[8, 8, 0, 0]} fill="#3b82f6" />
                     </BarChart>
                 </ResponsiveContainer>
             </CardContent>

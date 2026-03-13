@@ -112,7 +112,12 @@ export async function getReportsData(params?: GetReportsDataParams) {
     if (entry) entry.investimentos += Number(i.amount);
   }
 
-  const monthlyBreakdown = Array.from(monthlyMap.values());
+  const monthlyBreakdown = Array.from(monthlyMap.values()).map((item) => ({
+    month: item.label,
+    receitas: item.receitas,
+    despesas: item.despesas,
+    investimentos: item.investimentos,
+  }));
 
   // Dados para exportação CSV
   const csvRows = [

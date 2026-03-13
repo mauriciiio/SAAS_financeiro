@@ -45,7 +45,7 @@ export async function getDashboardData() {
   const lastMonths = getLastMonths(6);
   const evolutionStart = lastMonths[0].start;
 
-  const [transactions, investments, evolutionTransactions, evolutionInvestments, recentTx, recentInv] =
+  const [transactions, investments, evolutionTransactions, evolutionInvestments, recentTx, recentInv, allTimeInvestments] =
     await Promise.all([
       prisma.transaction.findMany({
         where: {
@@ -84,6 +84,10 @@ export async function getDashboardData() {
         where: { userId: user.id },
         orderBy: [{ date: "desc" }, { createdAt: "desc" }],
         take: 10,
+      }),
+      prisma.investmentContribution.aggregate({
+        where: { userId: user.id },
+        _sum: { amount: true },
       }),
     ]);
 
@@ -175,6 +179,11 @@ export async function getDashboardData() {
     .sort((a, b) => b.date.getTime() - a.date.getTime() || b.createdAt.getTime() - a.createdAt.getTime())
     .slice(0, 6);
 
+  const totalInvestedAllTime = Number(allTimeInvestments._sum.amount ?? 0);
+  const savingsRate = totalIncome > 0
+    ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100)
+    : 0;
+
   return {
     user,
     summary: {
@@ -182,6 +191,8 @@ export async function getDashboardData() {
       totalExpense,
       totalInvestments,
       balance,
+      totalInvestedAllTime,
+      savingsRate,
     },
     expensesByCategory,
     monthlyEvolution,

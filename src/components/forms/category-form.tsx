@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 
 export function CategoryForm() {
     const [formKey, setFormKey] = useState(0);
+    const [color, setColor] = useState("#64748b");
 
     async function action(formData: FormData) {
         const result = await createCategory(formData);
@@ -19,6 +20,7 @@ export function CategoryForm() {
 
         toast.success(result.message);
         setFormKey((prev) => prev + 1);
+        setColor("#64748b");
     }
 
     return (
@@ -55,7 +57,21 @@ export function CategoryForm() {
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Cor</label>
-                    <Input name="color" placeholder="Ex.: #22c55e" />
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="color"
+                            value={color}
+                            onChange={(e) => setColor(e.target.value)}
+                            className="h-10 w-12 cursor-pointer rounded-md border border-slate-200 bg-white p-0.5 dark:border-slate-700 dark:bg-slate-900"
+                        />
+                        <Input
+                            name="color"
+                            value={color}
+                            onChange={(e) => setColor(e.target.value)}
+                            placeholder="Ex.: #22c55e"
+                            className="flex-1 font-mono"
+                        />
+                    </div>
                 </div>
 
                 <div className="space-y-2">

@@ -8,6 +8,7 @@ import {
     Tooltip,
     ResponsiveContainer,
     CartesianGrid,
+    Legend,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency } from "@/lib/format";
@@ -55,11 +56,18 @@ export function MonthlyChart({ data }: MonthlyChartProps) {
                             }
                         />
                         <Tooltip
-                            formatter={(value: number) => formatCurrency(Number(value))}
+                            formatter={(value: number, name: string) => [
+                                formatCurrency(Number(value)),
+                                name.charAt(0).toUpperCase() + name.slice(1),
+                            ]}
                             contentStyle={{
                                 borderRadius: 16,
                                 border: "1px solid #e2e8f0",
                             }}
+                        />
+                        <Legend
+                            formatter={(value) => value.charAt(0).toUpperCase() + value.slice(1)}
+                            wrapperStyle={{ paddingTop: 8 }}
                         />
                         <Bar dataKey="receitas" radius={[8, 8, 0, 0]} fill="#22c55e" />
                         <Bar dataKey="despesas" radius={[8, 8, 0, 0]} fill="#ef4444" />

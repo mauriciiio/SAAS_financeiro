@@ -81,7 +81,26 @@ export default async function DashboardPage() {
                                         </div>
                                     </div>
 
-                                    <div className="mt-6 rounded-2xl bg-slate-900 p-5 text-white">
+                                    <div className="mt-4 grid gap-4 md:grid-cols-2">
+                                        <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/50">
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Total investido (histórico)</p>
+                                            <p className="mt-2 text-xl font-semibold text-blue-600 dark:text-blue-400">
+                                                {new Intl.NumberFormat("pt-BR", {
+                                                    style: "currency",
+                                                    currency: "BRL",
+                                                }).format(data.summary.totalInvestedAllTime)}
+                                            </p>
+                                        </div>
+
+                                        <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-700/50">
+                                            <p className="text-sm text-slate-500 dark:text-slate-400">Taxa de poupança</p>
+                                            <p className={`mt-2 text-xl font-semibold ${data.summary.savingsRate >= 20 ? "text-emerald-600 dark:text-emerald-400" : data.summary.savingsRate >= 0 ? "text-amber-600 dark:text-amber-400" : "text-rose-600 dark:text-rose-400"}`}>
+                                                {data.summary.savingsRate}% da renda
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 rounded-2xl bg-slate-900 p-5 text-white">
                                         <p className="text-sm text-slate-300">Saldo atual do mês</p>
                                         <p className="mt-2 text-3xl font-semibold">
                                             {new Intl.NumberFormat("pt-BR", {

@@ -26,6 +26,7 @@ type EditCategoryDialogProps = {
 
 export function EditCategoryDialog({ category }: EditCategoryDialogProps) {
     const [open, setOpen] = useState(false);
+    const [color, setColor] = useState(category.color || "#64748b");
 
     async function action(formData: FormData) {
         const result = await updateCategory(formData);
@@ -79,7 +80,21 @@ export function EditCategoryDialog({ category }: EditCategoryDialogProps) {
 
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-slate-700">Cor</label>
-                        <Input name="color" defaultValue={category.color || ""} />
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="color"
+                                value={color}
+                                onChange={(e) => setColor(e.target.value)}
+                                className="h-10 w-12 cursor-pointer rounded-md border border-slate-200 bg-white p-0.5"
+                            />
+                            <Input
+                                name="color"
+                                value={color}
+                                onChange={(e) => setColor(e.target.value)}
+                                placeholder="Ex.: #22c55e"
+                                className="flex-1 font-mono"
+                            />
+                        </div>
                     </div>
 
                     <div className="space-y-2">

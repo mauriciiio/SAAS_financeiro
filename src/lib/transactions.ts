@@ -67,9 +67,10 @@ export async function getTransactionsPageData(
     include: {
       category: true,
     },
-    orderBy: {
-      date: "desc",
-    },
+    orderBy: [
+      { date: "desc" },
+      { createdAt: "desc" },
+    ],
   });
 
   const incomeCategories = await prisma.category.findMany({

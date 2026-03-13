@@ -45,8 +45,7 @@ export async function getDashboardData() {
   const lastMonths = getLastMonths(6);
   const evolutionStart = lastMonths[0].start;
 
-  // Busca todos os dados em paralelo com apenas 4 queries (antes eram 12+ queries)
-  const [transactions, investments, evolutionTransactions, evolutionInvestments] =
+  const [transactions, investments, evolutionTransactions, evolutionInvestments, recentTx, recentInv] =
     await Promise.all([
       prisma.transaction.findMany({
         where: {
@@ -54,14 +53,14 @@ export async function getDashboardData() {
           date: { gte: start, lt: end },
         },
         include: { category: true },
-        orderBy: { date: "desc" },
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
       }),
       prisma.investmentContribution.findMany({
         where: {
           userId: user.id,
           date: { gte: start, lt: end },
         },
-        orderBy: { date: "desc" },
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
       }),
       prisma.transaction.findMany({
         where: {
@@ -74,6 +73,17 @@ export async function getDashboardData() {
           userId: user.id,
           date: { gte: evolutionStart, lt: end },
         },
+      }),
+      prisma.transaction.findMany({
+        where: { userId: user.id },
+        include: { category: true },
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        take: 10,
+      }),
+      prisma.investmentContribution.findMany({
+        where: { userId: user.id },
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        take: 10,
       }),
     ]);
 
@@ -143,24 +153,26 @@ export async function getDashboardData() {
   });
 
   const recentTransactions = [
-    ...transactions.map((item) => ({
+    ...recentTx.map((item) => ({
       id: item.id,
       title: item.title,
       category: item.category.name,
       amount: Number(item.amount),
       type: item.type === TransactionType.INCOME ? "income" : "expense",
       date: item.date,
+      createdAt: item.createdAt,
     })),
-    ...investments.map((item) => ({
+    ...recentInv.map((item) => ({
       id: item.id,
       title: item.title,
       category: "Investimento",
       amount: Number(item.amount),
       type: "investment" as const,
       date: item.date,
+      createdAt: item.createdAt,
     })),
   ]
-    .sort((a, b) => b.date.getTime() - a.date.getTime())
+    .sort((a, b) => b.date.getTime() - a.date.getTime() || b.createdAt.getTime() - a.createdAt.getTime())
     .slice(0, 6);
 
   return {

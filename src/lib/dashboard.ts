@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { TransactionType } from "@prisma/client";
+import { CategoryType, TransactionType } from "@prisma/client";
 
 export async function getLocalUser() {
   return prisma.user.findFirstOrThrow({
@@ -45,7 +45,7 @@ export async function getDashboardData() {
   const lastMonths = getLastMonths(6);
   const evolutionStart = lastMonths[0].start;
 
-  const [transactions, investments, evolutionTransactions, evolutionInvestments, recentTx, recentInv, allTimeInvestments] =
+  const [transactions, investments, evolutionTransactions, evolutionInvestments, recentTx, recentInv, allTimeInvestments, incomeCategories, expenseCategories] =
     await Promise.all([
       prisma.transaction.findMany({
         where: {
@@ -88,6 +88,14 @@ export async function getDashboardData() {
       prisma.investmentContribution.aggregate({
         where: { userId: user.id },
         _sum: { amount: true },
+      }),
+      prisma.category.findMany({
+        where: { userId: user.id, type: CategoryType.INCOME },
+        orderBy: { name: "asc" },
+      }),
+      prisma.category.findMany({
+        where: { userId: user.id, type: CategoryType.EXPENSE },
+        orderBy: { name: "asc" },
       }),
     ]);
 
@@ -186,6 +194,8 @@ export async function getDashboardData() {
 
   return {
     user,
+    incomeCategories,
+    expenseCategories,
     summary: {
       totalIncome,
       totalExpense,

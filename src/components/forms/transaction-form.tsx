@@ -14,11 +14,15 @@ type Category = {
 type TransactionFormProps = {
     incomeCategories: Category[];
     expenseCategories: Category[];
+    onSuccess?: () => void;
+    compact?: boolean;
 };
 
 export function TransactionForm({
     incomeCategories,
     expenseCategories,
+    onSuccess,
+    compact = false,
 }: TransactionFormProps) {
     const [type, setType] = useState<"INCOME" | "EXPENSE">("EXPENSE");
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
@@ -49,20 +53,23 @@ export function TransactionForm({
         toast.success(result.message);
         setFormKey((prev) => prev + 1);
         setType("EXPENSE");
+        onSuccess?.();
     }
 
     return (
         <form
             key={formKey}
             action={action}
-            className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+            className={compact ? "space-y-0" : "rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"}
         >
-            <div className="mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Novo lançamento</h3>
-                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                    Cadastre uma receita ou despesa no sistema.
-                </p>
-            </div>
+            {!compact && (
+                <div className="mb-6">
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Novo lançamento</h3>
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                        Cadastre uma receita ou despesa no sistema.
+                    </p>
+                </div>
+            )}
 
             <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">

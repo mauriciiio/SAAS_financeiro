@@ -14,6 +14,7 @@ type LancamentosPageProps = {
         category?: string;
         month?: string;
         year?: string;
+        page?: string;
     }>;
 };
 
@@ -28,6 +29,7 @@ export default async function LancamentosPage({
             category: params?.category,
             month: params?.month,
             year: params?.year,
+            page: params?.page,
         }),
         getPendingRecurringCount(),
     ]);
@@ -100,6 +102,9 @@ export default async function LancamentosPage({
                                                 name: item.category.name,
                                             },
                                         }))}
+                                        currentPage={data.pagination.currentPage}
+                                        totalPages={data.pagination.totalPages}
+                                        filterParams={data.filters}
                                     />
                                 </div>
                             </section>

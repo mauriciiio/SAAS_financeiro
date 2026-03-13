@@ -2,6 +2,7 @@ import { ExpensesByCategoryChart } from "@/components/dashboard/expenses-by-cate
 import { MonthlyChart } from "@/components/dashboard/monthly-chart";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
+import { QuickTransactionDialog } from "@/components/forms/quick-transaction-dialog";
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { getDashboardData } from "@/lib/dashboard";
@@ -19,6 +20,21 @@ export default async function DashboardPage() {
 
                     <main className="flex-1 p-6 lg:p-8">
                         <div className="mx-auto max-w-[1600px] space-y-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                                        Finance App
+                                    </h1>
+                                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                                        Controle financeiro pessoal
+                                    </p>
+                                </div>
+                                <QuickTransactionDialog
+                                    incomeCategories={data.incomeCategories}
+                                    expenseCategories={data.expenseCategories}
+                                />
+                            </div>
+
                             <SummaryCards
                                 totalIncome={data.summary.totalIncome}
                                 totalExpense={data.summary.totalExpense}

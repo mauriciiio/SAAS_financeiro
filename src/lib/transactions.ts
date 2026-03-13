@@ -1,11 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { CategoryType, TransactionType } from "@prisma/client";
 
+const PAGE_SIZE = 10;
+
 type GetTransactionsPageDataParams = {
   type?: string;
   category?: string;
   month?: string;
   year?: string;
+  page?: string;
 };
 
 function getMonthRange(month?: string, year?: string) {
@@ -54,62 +57,54 @@ export async function getTransactionsPageData(
     params?.year
   );
 
-  const transactions = await prisma.transaction.findMany({
-    where: {
-      userId: user.id,
-      ...(typeFilter ? { type: typeFilter as TransactionType } : {}),
-      ...(categoryFilter ? { categoryId: categoryFilter } : {}),
-      date: {
-        gte: start,
-        lt: end,
-      },
-    },
-    include: {
-      category: true,
-    },
-    orderBy: [
-      { date: "desc" },
-      { createdAt: "desc" },
-    ],
+  const currentPage = Math.max(1, Number(params?.page) || 1);
+  const skip = (currentPage - 1) * PAGE_SIZE;
+
+  const where = {
+    userId: user.id,
+    ...(typeFilter ? { type: typeFilter as TransactionType } : {}),
+    ...(categoryFilter ? { categoryId: categoryFilter } : {}),
+    date: { gte: start, lt: end },
+  };
+
+  const [transactions, totalCount, incomeCategories, expenseCategories, allCategories] =
+    await Promise.all([
+      prisma.transaction.findMany({
+        where,
+        include: { category: true },
+        orderBy: [{ date: "desc" }, { createdAt: "desc" }],
+        skip,
+        take: PAGE_SIZE,
+      }),
+      prisma.transaction.count({ where }),
+      prisma.category.findMany({
+        where: { userId: user.id, type: CategoryType.INCOME },
+        orderBy: { name: "asc" },
+      }),
+      prisma.category.findMany({
+        where: { userId: user.id, type: CategoryType.EXPENSE },
+        orderBy: { name: "asc" },
+      }),
+      prisma.category.findMany({
+        where: {
+          userId: user.id,
+          type: { in: [CategoryType.INCOME, CategoryType.EXPENSE] },
+        },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+
+  // totals are computed from all transactions in the month (not just current page)
+  const allTransactions = await prisma.transaction.findMany({
+    where,
+    select: { type: true, amount: true },
   });
 
-  const incomeCategories = await prisma.category.findMany({
-    where: {
-      userId: user.id,
-      type: CategoryType.INCOME,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  const expenseCategories = await prisma.category.findMany({
-    where: {
-      userId: user.id,
-      type: CategoryType.EXPENSE,
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  const allCategories = await prisma.category.findMany({
-    where: {
-      userId: user.id,
-      type: {
-        in: [CategoryType.INCOME, CategoryType.EXPENSE],
-      },
-    },
-    orderBy: {
-      name: "asc",
-    },
-  });
-
-  const totalIncome = transactions
+  const totalIncome = allTransactions
     .filter((item) => item.type === TransactionType.INCOME)
     .reduce((acc, item) => acc + Number(item.amount), 0);
 
-  const totalExpense = transactions
+  const totalExpense = allTransactions
     .filter((item) => item.type === TransactionType.EXPENSE)
     .reduce((acc, item) => acc + Number(item.amount), 0);
 
@@ -124,6 +119,11 @@ export async function getTransactionsPageData(
       category: categoryFilter || "",
       month: selectedMonth,
       year: selectedYear,
+    },
+    pagination: {
+      currentPage,
+      totalPages: Math.max(1, Math.ceil(totalCount / PAGE_SIZE)),
+      totalCount,
     },
     summary: {
       totalIncome,

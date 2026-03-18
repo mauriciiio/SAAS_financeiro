@@ -10,6 +10,7 @@ import {
     Settings,
     Landmark,
     BarChart3,
+    FileUp,
 } from "lucide-react";
 
 const items = [
@@ -19,6 +20,7 @@ const items = [
     { href: "/categorias", label: "Categorias", icon: Tags },
     { href: "/relatorios", label: "Relatórios", icon: BarChart3 },
     { href: "/configuracoes", label: "Configurações", icon: Settings },
+    { href: "/importar-csv", label: "Importar CSV", icon: FileUp },
 ];
 
 export function Sidebar() {

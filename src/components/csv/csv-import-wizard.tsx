@@ -55,8 +55,15 @@ function splitLine(line: string, delimiter: string): string[] {
 }
 
 function parseBRNumber(s: string): number {
-    // Brazilian format: 1.234,56 → 1234.56 | also -1.234,56
-    return parseFloat(s.replace(/\./g, "").replace(",", "."));
+    if (!s || s.trim() === "") return NaN;
+    const t = s.trim();
+    // XLSX may give plain decimals like "-17.93" (no comma)
+    if (!t.includes(",")) {
+        const plain = parseFloat(t);
+        if (!isNaN(plain)) return plain;
+    }
+    // Brazilian format: 1.234,56 → 1234.56
+    return parseFloat(t.replace(/\./g, "").replace(",", "."));
 }
 
 /** Converts DD/MM/YYYY → YYYY-MM-DD. Returns "" if unparseable. */
@@ -105,6 +112,48 @@ function parseCSVContent(content: string): RawRow[] {
         .map((line) => {
             const cols = splitLine(line, delimiter);
             return Object.fromEntries(headers.map((h, i) => [h, cols[i] ?? ""])) as RawRow;
+        })
+        .filter((row) => row.REFERENCE_ID && row.RELEASE_DATE);
+}
+
+// ───────────── XLSX parsing ─────────────
+
+async function parseXLSXContent(buffer: ArrayBuffer): Promise<RawRow[]> {
+    const XLSX = await import("xlsx");
+    const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const data = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, raw: true });
+
+    const rows = data as unknown[][];
+
+    // Find header row containing RELEASE_DATE
+    const headerIdx = rows.findIndex((row) =>
+        Array.isArray(row) && row.some((cell) => String(cell).toUpperCase().trim() === "RELEASE_DATE")
+    );
+    if (headerIdx === -1) {
+        throw new Error("Cabeçalho RELEASE_DATE não encontrado. Verifique se é o arquivo correto.");
+    }
+
+    const headers = rows[headerIdx].map((h) =>
+        String(h).toUpperCase().replace(/[^A-Z_]/g, "")
+    );
+
+    return rows
+        .slice(headerIdx + 1)
+        .filter((row) => row.some(Boolean))
+        .map((row) => {
+            const obj: Record<string, string> = {};
+            headers.forEach((h, i) => {
+                const cell = row[i];
+                if (cell instanceof Date) {
+                    const d = String(cell.getDate()).padStart(2, "0");
+                    const m = String(cell.getMonth() + 1).padStart(2, "0");
+                    obj[h] = `${d}/${m}/${cell.getFullYear()}`;
+                } else {
+                    obj[h] = String(cell ?? "");
+                }
+            });
+            return obj as RawRow;
         })
         .filter((row) => row.REFERENCE_ID && row.RELEASE_DATE);
 }
@@ -161,8 +210,10 @@ export function CsvImportWizard({ categories }: { categories: Category[] }) {
     async function handleFile(file: File) {
         setLoading(true);
         try {
-            const content = await file.text();
-            const rawRows = parseCSVContent(content);
+            const isXlsx = /\.xlsx?$/i.test(file.name);
+            const rawRows = isXlsx
+                ? await parseXLSXContent(await file.arrayBuffer())
+                : parseCSVContent(await file.text());
 
             if (rawRows.length === 0) {
                 toast.error("Nenhuma transação encontrada no arquivo.");
@@ -289,14 +340,15 @@ export function CsvImportWizard({ categories }: { categories: Category[] }) {
                 >
                     <Upload size={36} className={loading ? "animate-bounce" : ""} />
                     <span className="text-sm font-medium">
-                        {loading ? "Processando..." : "Clique para selecionar o arquivo CSV"}
+                        {loading ? "Processando..." : "Clique para selecionar o arquivo CSV ou XLSX"}
                     </span>
+                    <span className="text-xs text-slate-400">.csv · .xlsx · .xls</span>
                 </button>
 
                 <input
                     ref={fileRef}
                     type="file"
-                    accept=".csv,text/csv"
+                    accept=".csv,.xlsx,.xls,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     className="hidden"
                     onChange={onFileChange}
                 />

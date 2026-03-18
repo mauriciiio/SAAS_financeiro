@@ -59,11 +59,23 @@ function parseBRNumber(s: string): number {
     return parseFloat(s.replace(/\./g, "").replace(",", "."));
 }
 
-/** Converts DD/MM/YYYY → YYYY-MM-DD */
+/** Converts DD/MM/YYYY → YYYY-MM-DD. Returns "" if unparseable. */
 function parseBRDate(s: string): string {
-    const clean = s.replace(/\s/g, "");
-    const [day, month, year] = clean.split("/");
-    return `${year}-${month?.padStart(2, "0")}-${day?.padStart(2, "0")}`;
+    if (!s) return "";
+    const clean = s.replace(/\s/g, "").replace(/"/g, "");
+    const parts = clean.split("/");
+    if (parts.length !== 3) return "";
+    const [day, month, year] = parts;
+    if (!day || !month || !year) return "";
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+}
+
+/** Formats YYYY-MM-DD to DD/MM/YYYY for display (no Date constructor needed) */
+function displayDate(dateStr: string): string {
+    if (!dateStr) return "—";
+    const [year, month, day] = dateStr.split("-");
+    if (!year || !month || !day) return dateStr;
+    return `${day}/${month}/${year}`;
 }
 
 type RawRow = { RELEASE_DATE: string; TRANSACTION_TYPE: string; REFERENCE_ID: string; TRANSACTION_NET_AMOUNT: string };
@@ -158,13 +170,15 @@ export function CsvImportWizard({ categories }: { categories: Category[] }) {
             }
 
             // Build parsed rows
-            const parsed: ParsedRow[] = rawRows.map((row) => {
+            const parsed: ParsedRow[] = rawRows
+            .map((row) => {
                 const rawAmount = parseBRNumber(row.TRANSACTION_NET_AMOUNT);
                 const type: "INCOME" | "EXPENSE" = rawAmount >= 0 ? "INCOME" : "EXPENSE";
                 const amount = Math.abs(rawAmount);
+                const date = parseBRDate(row.RELEASE_DATE);
                 return {
                     referenceId: String(row.REFERENCE_ID).trim(),
-                    date: parseBRDate(row.RELEASE_DATE),
+                    date,
                     description: row.TRANSACTION_TYPE?.trim() ?? "",
                     rawAmount,
                     amount,
@@ -173,7 +187,8 @@ export function CsvImportWizard({ categories }: { categories: Category[] }) {
                     alreadyExists: false,
                     selected: true,
                 };
-            });
+            })
+            .filter((r) => r.referenceId && r.date && !Number.isNaN(r.rawAmount));
 
             // Check which already exist
             const refIds = parsed.map((r) => r.referenceId);
@@ -407,9 +422,7 @@ export function CsvImportWizard({ categories }: { categories: Category[] }) {
                                             />
                                         </td>
                                         <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                                            {new Intl.DateTimeFormat("pt-BR").format(
-                                                new Date(row.date + "T12:00:00")
-                                            )}
+                                            {displayDate(row.date)}
                                         </td>
                                         <td className="px-4 py-3 text-slate-900 dark:text-slate-100 max-w-[260px]">
                                             <span className="block truncate" title={row.description}>
